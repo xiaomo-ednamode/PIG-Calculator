@@ -42,6 +42,7 @@
             color: red;
             font-weight: bold;
         }
+        <div id="remainingBalance" style="margin-top: 10px; font-style: italic;"></div>
     </style>
 </head>
 <body>
@@ -62,6 +63,7 @@
     </form>
     <p id="result"></p>
     <p id="additionalIncome"></p>
+    <div id="remainingBalance" style="margin-top: 10px; font-style: italic;"></div>
     <script>
         const povertyGuidelines = {
             2025: {
@@ -122,17 +124,21 @@
 
             let resultText;
             let additionalIncomeText = '';
+            let remainingBalanceText = '';
             if (income >= guideline) {
                 resultText = "Meets Guidelines";
                 document.getElementById('additionalIncome').innerText = '';
+                document.getElementById('remainingBalance').innerText = ''; // Clear remaining balance if meets guidelines
             } else {
                 const remainingBalance = guideline - income;
                 resultText = "Does Not Meet Guidelines";
                 additionalIncomeText = `Additional income needed: $${remainingBalance}`;
+                remainingBalanceText = `Remaining balance needed (below poverty line): $${remainingBalance}`;
             }
 
             document.getElementById('result').innerText = resultText;
             document.getElementById('additionalIncome').innerText = additionalIncomeText;
+            document.getElementById('remainingBalance').innerText = remainingBalanceText;
         }
     </script>
 </body>
