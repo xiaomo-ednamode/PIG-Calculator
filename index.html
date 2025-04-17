@@ -37,6 +37,11 @@
             margin-top: 20px;
             font-weight: bold;
         }
+        #additionalIncome {
+            margin-top: 10px;
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -56,6 +61,7 @@
         <button type="button" onclick="calculatePoverty()">Check</button>
     </form>
     <p id="result"></p>
+    <p id="additionalIncome"></p>
     <script>
         const povertyGuidelines = {
             2025: {
@@ -115,14 +121,18 @@
             }
 
             let resultText;
+            let additionalIncomeText = '';
             if (income >= guideline) {
                 resultText = "Meets Guidelines";
+                document.getElementById('additionalIncome').innerText = '';
             } else {
                 const remainingBalance = guideline - income;
-                resultText = `Does Not Meet Guidelines. Additional income needed: $${remainingBalance}`;
+                resultText = "Does Not Meet Guidelines";
+                additionalIncomeText = `Additional income needed: $${remainingBalance}`;
             }
 
             document.getElementById('result').innerText = resultText;
+            document.getElementById('additionalIncome').innerText = additionalIncomeText;
         }
     </script>
 </body>
