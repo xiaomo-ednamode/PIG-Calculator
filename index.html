@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poverty Guidelines Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input {
+            margin-top: 5px;
+            padding: 5px;
+            width: 100%;
+            max-width: 300px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Poverty Guidelines Calculator</h1>
+    <form id="povertyCalculator">
+        <label for="householdSize">Household Size:</label>
+        <input type="number" id="householdSize" name="householdSize" required>
+        <label for="income">Income:</label>
+        <input type="number" id="income" name="income" required>
+        <button type="button" onclick="calculatePoverty()">Check</button>
+    </form>
+    <p id="result"></p>
+    <script>
+        const povertyGuidelines = {
+            2: 26437,
+            3: 33312,
+            4: 40187,
+            5: 47062,
+            6: 53937,
+            7: 60812,
+            8: 67687,
+        };
+
+        function calculatePoverty() {
+            const householdSize = parseInt(document.getElementById('householdSize').value);
+            const income = parseInt(document.getElementById('income').value);
+
+            let guideline;
+            if (householdSize <= 8) {
+                guideline = povertyGuidelines[householdSize];
+            } else {
+                const additionalPeople = householdSize - 8;
+                const additionalAmount = 6875;
+                guideline = povertyGuidelines[8] + (additionalPeople * additionalAmount);
+            }
+
+            if (income >= guideline) {
+                document.getElementById('result').innerText = "Meets Guidelines";
+            } else {
+                document.getElementById('result').innerText = "Does Not Meet Guidelines";
+            }
+        }
+    </script>
+</body>
+</html>
