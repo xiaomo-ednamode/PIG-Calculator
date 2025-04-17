@@ -16,7 +16,7 @@
             display: block;
             margin-top: 10px;
         }
-        input {
+        input, select {
             margin-top: 5px;
             padding: 5px;
             width: 100%;
@@ -42,6 +42,11 @@
 <body>
     <h1>Poverty Guidelines Calculator</h1>
     <form id="povertyCalculator">
+        <label for="year">Select Year:</label>
+        <select id="year" name="year" required>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+        </select>
         <label for="householdSize">Household Size:</label>
         <input type="number" id="householdSize" name="householdSize" required>
         <label for="income">Income:</label>
@@ -51,26 +56,40 @@
     <p id="result"></p>
     <script>
         const povertyGuidelines = {
-            2: 26437,
-            3: 33312,
-            4: 40187,
-            5: 47062,
-            6: 53937,
-            7: 60812,
-            8: 67687,
+            2025: {
+                2: 26437,
+                3: 33312,
+                4: 40187,
+                5: 47062,
+                6: 53937,
+                7: 60812,
+                8: 67687,
+                additional: 6875
+            },
+            2024: {
+                2: 25550,
+                3: 32275,
+                4: 39000,
+                5: 45725,
+                6: 52450,
+                7: 59175,
+                8: 65900,
+                additional: 6725
+            }
         };
 
         function calculatePoverty() {
+            const year = document.getElementById('year').value;
             const householdSize = parseInt(document.getElementById('householdSize').value);
             const income = parseInt(document.getElementById('income').value);
 
             let guideline;
             if (householdSize <= 8) {
-                guideline = povertyGuidelines[householdSize];
+                guideline = povertyGuidelines[year][householdSize];
             } else {
                 const additionalPeople = householdSize - 8;
-                const additionalAmount = 6875;
-                guideline = povertyGuidelines[8] + (additionalPeople * additionalAmount);
+                const additionalAmount = povertyGuidelines[year].additional;
+                guideline = povertyGuidelines[year][8] + (additionalPeople * additionalAmount);
             }
 
             if (income >= guideline) {
