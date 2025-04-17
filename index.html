@@ -114,11 +114,15 @@
                 guideline = povertyGuidelines[year][8] + (additionalPeople * additionalAmount);
             }
 
+            let resultText;
             if (income >= guideline) {
-                document.getElementById('result').innerText = "Meets Guidelines";
+                resultText = "Meets Guidelines";
             } else {
-                document.getElementById('result').innerText = "Does Not Meet Guidelines";
+                const remainingBalance = guideline - income;
+                resultText = `Does Not Meet Guidelines. Additional income needed: $${remainingBalance}`;
             }
+
+            document.getElementById('result').innerText = resultText;
         }
     </script>
 </body>
