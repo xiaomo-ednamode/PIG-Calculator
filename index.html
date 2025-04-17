@@ -54,6 +54,8 @@
             <option value="2024">2024</option>
             <option value="2023">2023</option>
             <option value="2022">2022</option>
+            <option value="2021">2021 (125%)</option>
+            <option value="2020">2020 (125%)</option>
         </select>
         <label for="householdSize">Household Size:</label>
         <input type="number" id="householdSize" name="householdSize" required>
@@ -105,6 +107,26 @@
                 7: 52388,
                 8: 58288,
                 additional: 5900
+            },
+            2021: {
+                2: 21775,
+                3: 27450,
+                4: 33125,
+                5: 38800,
+                6: 44475,
+                7: 50150,
+                8: 55825,
+                additional: (55825 - 50150) // Assuming a consistent increment
+            },
+            2020: {
+                2: 21550,
+                3: 27150,
+                4: 32750,
+                5: 38350,
+                6: 43950,
+                7: 49550,
+                8: 55150,
+                additional: (55150 - 49550) // Assuming a consistent increment
             }
         };
 
@@ -114,31 +136,41 @@
             const income = parseInt(document.getElementById('income').value);
 
             let guideline;
-            if (householdSize <= 8) {
-                guideline = povertyGuidelines[year][householdSize];
-            } else {
-                const additionalPeople = householdSize - 8;
-                const additionalAmount = povertyGuidelines[year].additional;
-                guideline = povertyGuidelines[year][8] + (additionalPeople * additionalAmount);
-            }
+            const yearData = povertyGuidelines[year];
 
-            let resultText;
-            let additionalIncomeText = '';
-            let remainingBalanceText = '';
-            if (income >= guideline) {
-                resultText = "Meets Guidelines";
+            if (yearData) {
+                if (householdSize <= 1) {
+                    guideline = (yearData[2] / 2) * householdSize; // Approximate for single person
+                } else if (householdSize <= 8) {
+                    guideline = yearData[householdSize];
+                } else {
+                    const additionalPeople = householdSize - 8;
+                    const additionalAmount = yearData.additional;
+                    guideline = yearData[8] + (additionalPeople * additionalAmount);
+                }
+
+                let resultText;
+                let additionalIncomeText = '';
+                let remainingBalanceText = '';
+                if (income >= guideline) {
+                    resultText = "Meets Guidelines";
+                    document.getElementById('additionalIncome').innerText = '';
+                    document.getElementById('remainingBalance').innerText = '';
+                } else {
+                    const remainingBalance = guideline - income;
+                    resultText = "Does Not Meet Guidelines";
+                    additionalIncomeText = `Additional income needed: $${remainingBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                    remainingBalanceText = `Remaining balance needed (below poverty line): $${remainingBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                }
+
+                document.getElementById('result').innerText = resultText;
+                document.getElementById('additionalIncome').innerText = additionalIncomeText;
+                document.getElementById('remainingBalance').innerText = remainingBalanceText;
+            } else {
+                document.getElementById('result').innerText = "Data for the selected year is not available.";
                 document.getElementById('additionalIncome').innerText = '';
-                document.getElementById('remainingBalance').innerText = ''; // Clear remaining balance if meets guidelines
-            } else {
-                const remainingBalance = guideline - income;
-                resultText = "Does Not Meet Guidelines";
-                additionalIncomeText = `Additional income needed: $${remainingBalance}`;
-                remainingBalanceText = `Remaining balance needed (below poverty line): $${remainingBalance}`;
+                document.getElementById('remainingBalance').innerText = '';
             }
-
-            document.getElementById('result').innerText = resultText;
-            document.getElementById('additionalIncome').innerText = additionalIncomeText;
-            document.getElementById('remainingBalance').innerText = remainingBalanceText;
         }
     </script>
 </body>
